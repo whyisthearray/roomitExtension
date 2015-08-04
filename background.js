@@ -1,8 +1,10 @@
 chrome.tabs.onActivated.addListener(
 		function (activeInfo){	
 			chrome.tabs.get(activeInfo.tabId, function(tab){
-				if(tab.url.indexOf("twitch.tv")>=0){
-					
+
+				var expression = /^(((https?:\/\/)?(www\.)?)?(((twitch|azubu|hitbox)\.tv)|douyutv\.com|games\.dailymotion\.com\/live|huomaotv\.com\/live|youtube\.com|youtu\.be)\/(watch\?v\=)?([^\/]+)\/?)?$/g
+				var regex = new RegExp(expression);
+				if(tab.url.match(regex)){					
 					chrome.browserAction.setIcon({path:"rLogo.png"});
 					chrome.browserAction.setTitle({title:"Create room on Roomit.tv"});
 					chrome.browserAction.setPopup({popup:"popup.html"});					
@@ -10,7 +12,7 @@ chrome.tabs.onActivated.addListener(
 				else{
 					chrome.browserAction.setIcon({path:"rLogoDis.png"});
 					chrome.browserAction.setPopup({popup:""});
-					chrome.browserAction.setTitle({title:"Cannot create a room with this link"});
+					chrome.browserAction.setTitle({title:"Cannot create a room with this link. Choose one of stream channels."});
 				
 				}
 			})
@@ -18,11 +20,16 @@ chrome.tabs.onActivated.addListener(
 	);
 
 
+
+
+
 chrome.tabs.onUpdated.addListener(
 	function(tabId, changeInfo, tab)
 	{
-			if(changeInfo.url.indexOf("twitch.tv")>=0){
-					
+		if(!tab.selected) return;
+		var expression = /^(((https?:\/\/)?(www\.)?)?(((twitch|azubu|hitbox)\.tv)|douyutv\.com|games\.dailymotion\.com\/live|huomaotv\.com\/live|youtube\.com|youtu\.be)\/(watch\?v\=)?([^\/]+)\/?)?$/g
+				var regex = new RegExp(expression);
+				if(tab.url.match(regex)){					
 					chrome.browserAction.setIcon({path:"rLogo.png"});
 					chrome.browserAction.setTitle({title:"Create room on Roomit.tv"});
 					chrome.browserAction.setPopup({popup:"popup.html"});					
@@ -30,7 +37,7 @@ chrome.tabs.onUpdated.addListener(
 				else{
 					chrome.browserAction.setIcon({path:"rLogoDis.png"});
 					chrome.browserAction.setPopup({popup:""});
-					chrome.browserAction.setTitle({title:"Cannot create a room with this link"});
+					chrome.browserAction.setTitle({title:"Cannot create a room with this link. Choose one of stream channels."});
 				
 				}
 	}

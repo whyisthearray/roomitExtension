@@ -76,14 +76,17 @@ body {
 <body>
 <div style="width:200px;height:80px">
 <h2>Room name (optional):</h2>
-<input type="text" class="form-control" id="roomName">
+<input type="text" class="form-control" id="roomName" autofocus>
 <div id="error" class="createError" style="display: block;">
  This name is either taken or contains not allowed characters. Please use following characters to name rooms: a-z 0-9 _ - 
 </div>
+<div id="error2" class="createError" style="display: block;">
+ This Youtube link is not working correct. Please delete "&feature=youtu.be" part and reload the page.
+</div>
 <input type = "button" id="open" class="btn" value="Create room">
 </div>
+
 <script src = "popup.js">
 </script>
-
 </body>
 </html>

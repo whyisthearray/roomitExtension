@@ -1,40 +1,50 @@
-	document.addEventListener('DOMContentLoaded', function() 
-	{
-		$("#error").hide();
-	var roomName = document.getElementById('roomName');		
-	var openLink = document.getElementById('open');		
-	var newurl;		
-		chrome.tabs.query({
-			active:true,
-			lastFocusedWindow:true
-		}, function(result){
+var errorText1="This name is either taken or contains not allowed characters. Please use following characters to name rooms: a-z 0-9 _ -";
+var errorText2="This Youtube link is not working correct. Please delete  '&feature=youtu.be' part.";
+$(document).ready(function(){
+	$("#error").hide();
+	$("#error2").hide();
+	var newurl;
+	chrome.tabs.query({active:true,lastFocusedWindow:true}, function(result){
 			newurl = result[0].url;
-		});
-    openLink.addEventListener('click',function(){					
-		var data={
+
+	});
+
+	$(document).keypress(function(e) {
+    if(e.which == 13) {
+        createRoom();
+        
+    }
+	});
+
+	$("#open").click(function(){
+			createRoom();	  
+		
+	});
+
+function createRoom(){
+
+	var data={
 			link:newurl,
-			name:roomName.value			
-		}				
-		 $.ajax(
-		 {
+			name: $("#roomName").val()			
+		}
+	if(data.link.indexOf("youtube")>=0){
+		$("#error").hide();
+		$("#error2").show();
+		return;
+	}
+	$.ajax(
+		{
             url: "http://roomit.tv/room/create/",
             type: "POST",
             data: data,
             dataType: "text",
-            error: function(xhr,status,error){
-              	
-            },
-			success: function(responce){
+            success: function(responce){
 				var x = jQuery.parseJSON(responce);
-				if(x.error==null){
-					openRoom("http://roomit.tv/room/"+ x.name);
+				if(x.error==null){chrome.tabs.update({url:"http://roomit.tv/room/"+ x.name},function(tab){window.close();});}
+				else{ 
+					$("#error2").hide();$("#error").show();
 				}
-				else{$("#error").show();}
-			}  			 
-        }
-    );		 
-	});
-	});	 
-	function openRoom(url){
-		chrome.tabs.create({url:url});		
+			}
+		})	
 	};	
+});
